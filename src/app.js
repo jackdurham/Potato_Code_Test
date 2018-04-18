@@ -1,13 +1,17 @@
 import React    from 'react';
 import ReactDOM from 'react-dom';
-import Axios    from 'axios';
+
+import PostsIndex from './components/posts/PostsIndex';
 
 class App extends React.Component {
-  render() {
-    constructor() {
-      super();
 
-    }
+  render() {
+    return (
+      <div>
+        <PostsIndex />
+      </div>
+    );
+  }
 }
 
 ReactDOM.render(
