@@ -8,47 +8,40 @@ import BackButton from '../utility/BackButton';
 
 class PostsShow extends React.Component {
   state = {
-    title: null,
-    images: null,
-    published: null,
-    author: null,
-    link: null,
-    description: null,
-    tags: null
+    image: null
   }
 
   componentDidMount() {
+    const photoId = this.props.match.params.id;
+
     $.ajax({
-      url: 'https://api.flickr.com/services/feeds/photos_public.gne?tags=potato&tagmode=all&format=json&jsoncallback=?',
-      dataType: 'jsonp',
-      success: (data) => this.setState({ image: data.items }, () => console.log(data))
+      url:
+      `https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=5bd3ac199df53e2dd8c5b5ee0810db48&photo_id=${photoId}&format=json&nojsoncallback=1`,
+      dataType: 'json',
+      success: (data) => this.setState({ image: data }),
     });
   }
 
   render() {
+    const { image } = this.state;
+
     return (
       <div className="container">
-        { this.state.imagess && this.state.imagess.map((images,i) =>
-          <section>
-            <div className="border" key={i}>
-              <div>
-                <div className="col-md-9">
-                  <a href={images.link}><h2>{images.title}</h2></a>
-                  <h4>{images.author}</h4>
-                  <h4>{images.published}</h4>
-                  <img
-                    src={images.media.m}
-                  />
-                </div>
-                <div>
-                  <BackButton />
-                  <p className="description">{images.description}</p>
-                  <p>{images.tags}</p>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
+        { this.state.image &&
+          <div className="border">
+            <main>
+              <BackButton />
+              <a href={image.link}><h2>{image.photo.title._content}</h2></a>
+              <h4 className="showInfo">{image.photo.owner.username}</h4>
+              <h4 className="showInfo">{image.photo.dates.taken}</h4>
+              <img
+                src={image.photo.urls.url._content}
+              />
+              <p>{image.photo.description._content}</p>
+              <p>{image.photo.tags.tag._content}</p>
+            </main>
+          </div>
+        }
       </div>
     )
   }

@@ -11,11 +11,7 @@ class PostsIndex extends React.Component {
   constructor() {
     super();
     this.state = {
-      title: null,
       images: null,
-      published: null,
-      author: null,
-      link: null,
       per_page: 5
     };
     this.loadMore = this.loadMore.bind(this);
@@ -26,7 +22,13 @@ class PostsIndex extends React.Component {
     $.ajax({
       url: 'https://api.flickr.com/services/feeds/photos_public.gne?tags=potato&tagmode=all&format=json&jsoncallback=?',
       dataType: 'jsonp',
-      success: (data) => this.setState({ images: data.items }, () => console.log(this.state.images))
+      success: (data) => {
+        data.items.map(item => {
+          const linkArray = item.link.split('/');
+          item.link = linkArray[linkArray.length - 2] + linkArray[linkArray.length - 1];
+        });
+        this.setState({ images: data.items });
+      }
     });
   }
 
